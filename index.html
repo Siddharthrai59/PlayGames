@@ -178,11 +178,14 @@ label input:focus,label select:focus,label textarea:focus{border-color:var(--acc
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8WSQZWCYG9"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-8WSQZWCYG9');
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+gtag('js',new Date());gtag('config','G-8WSQZWCYG9');
+document.addEventListener("click",function(e){
+var el=e.target.closest("[data-play]");
+if(!el)return;
+try{var g=byId(el.dataset.play);gtag("event","play_game",{game_name:g?g.title:el.dataset.play})}catch(x){}
+},true);
 </script>
   
 </head>
