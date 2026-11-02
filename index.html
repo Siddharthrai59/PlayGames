@@ -201,8 +201,7 @@ try{var g=byId(el.dataset.play);gtag("event","play_game",{game_name:g?g.title:el
   <button class="nav" data-view="favs"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.600-7 10-7 10z"/></svg><span class="lbl">Favorites</span></button>
   <div class="sec">Categories</div>
   <div id="cats"></div>
-  <div class="sec">Quick launch</div>
-  <div id="ql"></div>
+  
 </aside>
 <div class="main">
   <header class="top">
@@ -780,8 +779,7 @@ function render(){const list=visible();
   renderFilters();renderSide()}
 function renderSide(){const gs=[...new Set(all().map(g=>g.genre))].sort();
   $("#cats").innerHTML=gs.map(n=>`<button class="ql" data-cat="${esc(n)}" style="${cat===n?"background:#262626;color:#fff":""}"><b style="background:linear-gradient(135deg,hsl(${hue(n)} 80% 55%),hsl(${(hue(n)+60)%360} 70% 30%))"></b><span>${esc(n)}</span></button>`).join("");
-  const r=recent.map(byId).filter(Boolean).slice(0,5);
-  $("#ql").innerHTML=r.length?r.map(g=>`<button class="ql" data-play="${g.id}" title="Launch ${esc(g.title)}"><b style="background:${bg(g)}"></b><span>${esc(g.title)}</span></button>`).join(""):'<p class="empty-s">Games you play appear here.</p>'}
+   }
 function renderFilters(){const gs=all();
   const G=[["genre","Genre",[...new Set(gs.map(g=>g.genre))].sort(),g=>[g.genre]],["tag","Features",[...new Set(gs.flatMap(g=>g.tags||[]))].sort(),g=>g.tags||[]],["platform","Platform",[...new Set(gs.map(g=>g.platform))].sort(),g=>[g.platform]]];
   $("#fgroups").innerHTML=G.map(([k,l,o,fn])=>`<details open><summary>${l}</summary>${o.map(v=>`<label class="opt" style="font-weight:400"><input type="checkbox" data-f="${k}" value="${esc(v)}" ${sel[k].has(v)?"checked":""}>${esc(v)}<em>${gs.filter(g=>fn(g).includes(v)).length}</em></label>`).join("")}</details>`).join("")}
