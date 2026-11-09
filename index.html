@@ -8,14 +8,14 @@
 <meta name="google-site-verification" content="JO__XNmRBvu0Kj0lNGVqppgcLfm3T2tTcBA8-O_XrLc">
 <title>Online Play Game – Play Free Browser Games Online</title>
 <meta name="description" content="Online Play Game: play free browser games online instantly. No download, no signup. Action, puzzle, arcade, sports and more.">
-<link rel="canonical" href="https://onlineplay.qd.je/">
+<link rel="canonical" href="https://siddharthrai59.github.io/PlayGames/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Online Play Game">
 <meta property="og:title" content="Online Play Game – Free Browser Games">
 <meta property="og:description" content="Play free browser games online instantly. No download needed.">
-<meta property="og:url" content="https://onlineplay.qd.je/"><meta property="og:image" content="https://onlineplay.qd.je/logo-full.png">
+<meta property="og:url" content="https://siddharthrai59.github.io/PlayGames/"><meta property="og:image" content="https://siddharthrai59.github.io/PlayGames/logo-full.png">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Online Play Game","alternateName":"Online Play","url":"https://onlineplay.qd.je/"},{"@type":"Organization","name":"Online Play Game","url":"https://onlineplay.qd.je/","logo":"https://onlineplay.qd.je/logo-icon.png"}]}</script>
-<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Online Play Game","alternateName":"Online Play","url":"https://siddharthrai59.github.io/PlayGames/"},{"@type":"Organization","name":"Online Play Game","url":"https://siddharthrai59.github.io/PlayGames/","logo":"https://siddharthrai59.github.io/PlayGames/logo-icon.png"}]}</script>
+<link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root{--bg:#121212;--panel:#181818;--card:#202020;--line:#2c2c2c;--text:#f2f2f2;--mute:#8d8d95;--acc:#2ee6ff;--acc2:#8a5cff;--r:14px}
 *{box-sizing:border-box;margin:0}
@@ -202,18 +202,19 @@ const descOf=id=>(D||(D=fetch("desc.json",{cache:"no-cache"}).then(r=>r.ok?r.jso
 const poster=g=>{const i=su(g.img);return`<div class="poster" style="background:${bg(g)}">${i?`<img src="${esc(i)}" alt="${esc(g.title)}" loading="lazy" decoding="async">`:""}<div class="fallback" style="${i?"z-index:-1":""}">${esc(g.title)}<small>${esc(g.genre)}</small></div></div>`};
 document.addEventListener("error",e=>{if(e.target.tagName==="IMG"&&(e.target.closest(".poster")||e.target.classList.contains("sposter")))e.target.remove()},true);
 const sortG=a=>a.filter(g=>g&&g.id&&g.title&&!g.off).map((g,i)=>[g,i]).sort((x,y)=>(+x[0].pin||1e9)-(+y[0].pin||1e9)||x[1]-y[1]).map(x=>x[0]);
-function list(){let l=G;l=view==="install"?l.filter(g=>g.dl):view==="favs"?l.filter(g=>favs.includes(g.id)):l.filter(g=>g.url);
+function list(){let l=G;l=view==="install"?l.filter(g=>g.dl&&!g.url):view==="favs"?l.filter(g=>favs.includes(g.id)):l.filter(g=>g.url);
  if(cat)l=l.filter(g=>g.genre===cat);const s=q.trim().toLowerCase();
  if(s)l=l.filter(g=>(g.title+" "+g.genre+" "+(g.tags||[]).join(" ")).toLowerCase().includes(s));
  if(sel.genre.size)l=l.filter(g=>sel.genre.has(g.genre));
  if(sel.tag.size)l=l.filter(g=>[...sel.tag].every(t=>(g.tags||[]).includes(t)));
  if(sel.platform.size)l=l.filter(g=>sel.platform.has(g.platform));return l}
 const card=g=>`<div class="card" data-id="${esc(g.id)}">${poster(g)}${favs.includes(g.id)?'<span class="fav">♥ Favorite</span>':""}<div class="meta"><div><h3>${esc(g.title)}</h3><p>${esc(g.genre)}</p></div><button class="dots" data-menu aria-label="Options for ${esc(g.title)}"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button></div></div>`;
+let lastC=0;const cols=()=>mobile()?(innerWidth<=360?2:3):Math.max(1,Math.floor(($("#grid").clientWidth+22)/198));
 const TT={play:"Play",install:"Install",favs:"Favorites"};
 function render(){const l=list();$("#title").textContent=cat||TT[view];$("#count").textContent=l.length+(l.length===1?" game":" games");
- $("#grid2").innerHTML=l.slice(12).map(card).join("");$("#grid").innerHTML=l.length?l.slice(0,12).map(card).join(""):`<div class="none" style="grid-column:1/-1"><h2>${view==="play"?"No games match":"Nothing here yet"}</h2><p>${view==="play"?"Clear a filter or try another search.":view==="install"?"Downloadable games will appear here.":"Tap the heart on a game to save it here."}</p></div>`;
+ const nc=cols(),sp=Math.ceil(12/nc)*nc;lastC=nc;$("#grid2").innerHTML=l.slice(sp).map(card).join("");$("#grid").innerHTML=l.length?l.slice(0,sp).map(card).join(""):`<div class="none" style="grid-column:1/-1"><h2>${view==="play"?"No games match":"Nothing here yet"}</h2><p>${view==="play"?"Clear a filter or try another search.":view==="install"?"Downloadable games will appear here.":"Tap the heart on a game to save it here."}</p></div>`;
  document.querySelectorAll(".nav").forEach(n=>n.classList.toggle("on",n.dataset.view===view));
- $('[data-view="install"]').hidden=!G.some(g=>g.dl);
+ $('[data-view="install"]').hidden=!G.some(g=>g.dl&&!g.url);
  const gs=[...new Set(G.map(g=>g.genre))].sort();
  $("#cats").innerHTML=gs.map(n=>`<button class="ql" data-cat="${esc(n)}" style="${cat===n?"background:#262626;color:#fff":""}"><b style="background:linear-gradient(135deg,hsl(${hue(n)} 80% 55%),hsl(${(hue(n)+60)%360} 70% 30%))"></b><span>${esc(n)}</span></button>`).join("");
  pop();$("#fbtn").classList.toggle("act",sel.genre.size+sel.tag.size+sel.platform.size>0);hero()}
@@ -228,12 +229,12 @@ function hero(){const el=$("#hero"),P=view==="play"&&!q&&!cat?G.filter(g=>g.prom
  el.hidden=false;hi=0;
  el.innerHTML=`<div class="track" id="trk">${P.map(slide).join("")}</div>`+(P.length>1?`<button class="hn l" data-hn="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="hn r" data-hn="1" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button><div class="dr">${P.map((_,i)=>`<button data-s="${i}" aria-label="Slide ${i+1}"></button>`).join("")}</div>`:"");
  const t=$("#trk");dots();t.addEventListener("scroll",()=>{hi=Math.round(t.scrollLeft/t.clientWidth);dots()},{passive:true});
- if(P.length>1&&!reduce){el.onmouseenter=()=>hold=true;el.onmouseleave=()=>hold=false;el.ontouchstart=()=>hold=true;el.ontouchend=()=>setTimeout(()=>hold=false,4000);
+ if(P.length>1){el.onmouseenter=()=>hold=true;el.onmouseleave=()=>hold=false;el.ontouchstart=()=>hold=true;el.ontouchend=()=>setTimeout(()=>hold=false,4000);
   T=setInterval(()=>{if(!document.hidden&&!hold)slideTo(hi+1)},5000)}}
 const ov=$("#ov"),modal=$("#modal");let closeT;
 function openModal(h){clearTimeout(closeT);modal.getAnimations().forEach(a=>a.cancel());modal.innerHTML='<button class="x" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+h;ov.classList.add("on")}
 function closeModal(){if(!ov.classList.contains("on"))return;ov.classList.remove("on");modal.animate([{opacity:1,transform:"none"},{opacity:0,transform:"translateY(12px) scale(.98)"}],{duration:260,easing:"ease-in",fill:"forwards"});closeT=setTimeout(()=>{modal.innerHTML=""},400)}
-function detail(id,card){const g=byId(id);if(!g)return;const dl=su(g.dl);
+function detail(id,card){const g=byId(id);if(!g)return;const dl=g.url?null:su(g.dl);
  openModal(`<div class="det">${poster(g)}<div class="info"><h2>${esc(g.title)}</h2><div class="tags"><span class="tag g">${esc(g.genre)}</span>${(g.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}${g.platform?`<span class="tag">${esc(g.platform)}</span>`:""}</div><p id="dtext"></p><div class="acts">${g.url?`<button class="btn pri play" data-play="${esc(g.id)}">PLAY NOW</button>`:""}${dl?`<a class="btn play${g.url?"":" pri"}" href="${esc(dl)}" target="_blank" rel="noopener noreferrer" data-dl="${esc(g.id)}">DOWNLOAD</a>`:""}<button class="btn" data-fav="${esc(g.id)}">${favs.includes(g.id)?"♥ In favorites":"♡ Add to favorites"}</button></div></div></div>`);
  descOf(g.id).then(t=>{const p=$("#dtext");if(p)p.textContent=t});
  const src=card&&card.querySelector(".poster"),mp=modal.querySelector(".poster"),b=mp.getBoundingClientRect();if(reduce)return;
@@ -285,7 +286,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button,a,.card,.
  if(t.classList.contains("slide")){detail(d.id);return}
  if(t.classList.contains("card")){closeMenus();detail(d.id,t)}});
 addEventListener("keydown",e=>{if(e.key==="Escape"){if($("#launch").classList.contains("on"))exitGame();else closeModal();closeMenus();closePop();closeDrawer()}});
-addEventListener("resize",()=>{if(!mobile())S.classList.remove("open");sync()});
+let rt;addEventListener("resize",()=>{if(!mobile())S.classList.remove("open");sync();clearTimeout(rt);rt=setTimeout(()=>{if(G.length&&cols()!==lastC)render()},150)});
 $("#q").addEventListener("input",e=>{q=e.target.value;render()});
 $("#fgroups").addEventListener("change",e=>{const i=e.target;i.checked?sel[i.dataset.f].add(i.value):sel[i.dataset.f].delete(i.value);render()});
 fetch("games.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>{G=sortG(Array.isArray(a)?a:[]);render()}).catch(()=>{$("#grid").innerHTML='<div class="none" style="grid-column:1/-1"><h2>Games could not be loaded</h2><p>Please refresh the page.</p></div>'});
