@@ -235,7 +235,7 @@ const ov=$("#ov"),modal=$("#modal");let closeT;
 function openModal(h){clearTimeout(closeT);modal.getAnimations().forEach(a=>a.cancel());modal.innerHTML='<button class="x" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'+h;ov.classList.add("on")}
 function closeModal(){if(!ov.classList.contains("on"))return;ov.classList.remove("on");modal.animate([{opacity:1,transform:"none"},{opacity:0,transform:"translateY(12px) scale(.98)"}],{duration:260,easing:"ease-in",fill:"forwards"});closeT=setTimeout(()=>{modal.innerHTML=""},400)}
 function detail(id,card){const g=byId(id);if(!g)return;const dl=g.url?null:su(g.dl);
- openModal(`<div class="det">${poster(g)}<div class="info"><h2>${esc(g.title)}</h2><div class="tags"><span class="tag g">${esc(g.genre)}</span>${(g.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}${g.platform?`<span class="tag">${esc(g.platform)}</span>`:""}</div><p id="dtext"></p><div class="acts">${g.url?`<button class="btn pri play" data-play="${esc(g.id)}">PLAY NOW</button>`:""}${dl?`<a class="btn play${g.url?"":" pri"}" href="${esc(dl)}" target="_blank" rel="noopener noreferrer" data-dl="${esc(g.id)}">DOWNLOAD</a>`:""}<button class="btn" data-fav="${esc(g.id)}">${favs.includes(g.id)?"♥ In favorites":"♡ Add to favorites"}</button></div></div></div>`);
+ openModal(`<div class="det">${poster(g)}<div class="info"><h2>${esc(g.title)}</h2><div class="tags"><span class="tag g">${esc(g.genre)}</span>${(g.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}${g.platform?`<span class="tag">${esc(g.platform)}</span>`:""}</div><p id="dtext"></p><div class="acts">${g.url?`<button class="btn pri play" data-play="${esc(g.id)}">PLAY NOW</button>`:""}${dl?`<a class="btn play${g.url?"":" pri"}" href="${esc(dl)}" target="_blank" rel="noopener noreferrer" data-dl="${esc(g.id)}">DOWNLOAD</a>`:""}<button class="btn" data-share="${esc(g.id)}">Share</button><button class="btn" data-share="${esc(g.id)}">Share</button><button class="btn" data-fav="${esc(g.id)}">${favs.includes(g.id)?"♥ In favorites":"♡ Add to favorites"}</button></div></div></div>`);
  descOf(g.id).then(t=>{const p=$("#dtext");if(p)p.textContent=t});
  const src=card&&card.querySelector(".poster"),mp=modal.querySelector(".poster"),b=mp.getBoundingClientRect();if(reduce)return;
  modal.animate([{opacity:0,transform:"translateY(18px) scale(.97)"},{opacity:1,transform:"none"}],{duration:480,easing:EASE});
@@ -265,6 +265,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button,a,.card,.
  if(!t){closeMenus();closePop();return}
  if(!t.closest(".menu")&&!t.hasAttribute("data-menu"))closeMenus();
  if(!t.closest(".fwrap"))closePop();
+                                    
  const d=t.dataset;
  if(t.id==="sbtn"){if(mobile()){S.classList.toggle("open");sync()}else document.body.classList.toggle("side-hidden");return}
  if(t.id==="scrim"){closeDrawer();return}
@@ -278,7 +279,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button,a,.card,.
  if(d.play){play(d.play);return}
  if(d.open){detail(d.open);return}
  if(d.dl){if(typeof gtag==="function")try{gtag("event","download_click",{game_id:d.dl})}catch(x){}return}
- if(d.fav){toggleFav(d.fav);detail(d.fav);return}
+ if(d.share){const g=byId(d.share),url=location.origin+location.pathname+"#"+d.share;if(navigator.share)navigator.share({title:g.title,url}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>toast("Link copied"),()=>toast(url));else toast(url);return} if(d.fav){toggleFav(d.fav);detail(d.fav);return}
  if(t.hasAttribute("data-menu")){showMenu(t);return}
  if(d.act){const[a,id]=d.act.split(":");closeMenus();if(a==="fav")toggleFav(id);if(a==="open"){const g=byId(id),u=g&&su(g.url);if(u)window.open(u,"_blank","noopener")}return}
  if(d.hn){slideTo(hi+ +d.hn);return}
@@ -289,7 +290,7 @@ addEventListener("keydown",e=>{if(e.key==="Escape"){if($("#launch").classList.co
 let rt;addEventListener("resize",()=>{if(!mobile())S.classList.remove("open");sync();clearTimeout(rt);rt=setTimeout(()=>{if(G.length&&cols()!==lastC)render()},150)});
 $("#q").addEventListener("input",e=>{q=e.target.value;render()});
 $("#fgroups").addEventListener("change",e=>{const i=e.target;i.checked?sel[i.dataset.f].add(i.value):sel[i.dataset.f].delete(i.value);render()});
-fetch("games.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>{G=sortG(Array.isArray(a)?a:[]);render()}).catch(()=>{$("#grid").innerHTML='<div class="none" style="grid-column:1/-1"><h2>Games could not be loaded</h2><p>Please refresh the page.</p></div>'});
+fetch("games.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(a=>{G=sortG(Array.isArray(a)?a:[]);render();const hg=byId(decodeURIComponent(location.hash.slice(1)));if(hg)detail(hg.id)}).catch(()=>{$("#grid").innerHTML='<div class="none" style="grid-column:1/-1"><h2>Games could not be loaded</h2><p>Please refresh the page.</p></div>'});
 })();
 </script>
 <!-- ADS (loaded last so they never slow the page). Remove a line to remove that ad. -->
