@@ -146,6 +146,7 @@ summary::after{content:"+";color:var(--mute)}details[open] summary::after{conten
 }
 @media(max-width:360px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(hover:none){.card:hover .poster{transform:none;box-shadow:none}}
+.cont{margin-bottom:18px}.cont[hidden]{display:none}.cont h2{font-size:16px;margin:0 0 10px}.crow{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none}.crow::-webkit-scrollbar{display:none}.crow .card{flex:0 0 120px}.crow .dots{display:none}
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8WSQZWCYG9"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-8WSQZWCYG9');</script>
@@ -171,7 +172,7 @@ summary::after{content:"+";color:var(--mute)}details[open] summary::after{conten
     <section class="hero" id="hero" hidden aria-label="Featured games"></section>
     <!-- AD SLOT 1 (top, under the banner): size 728x90 on desktop / 320x50 on mobile. Paste ad code between the tags. -->
     <div class="adslot" id="ad-top"></div>
-    <div class="head"><h1 id="title">Play</h1><span id="count"></span></div>
+    <div class="cont" id="cont" hidden></div>     <div class="head"><h1 id="title">Play</h1><span id="count"></span></div>
     <div class="grid" id="grid"></div>
     <!-- AD SLOT 2 (middle, after the first 12 games): size 300x250, 336x280 or a native banner. -->
     <div class="adslot" id="ad-mid"><script>atOptions={'key':'cedc5cee34ec5838ccba64c0bc8980a1','format':'iframe','height':250,'width':300,'params':{}};</script><script src="https://www.highrevenueformat.com/cedc5cee34ec5838ccba64c0bc8980a1/invoke.js"></script></div>
@@ -217,7 +218,7 @@ function render(){const l=list();$("#title").textContent=cat||TT[view];$("#count
  $('[data-view="install"]').hidden=!G.some(g=>g.dl&&!g.url);
  const gs=[...new Set(G.map(g=>g.genre))].sort();
  $("#cats").innerHTML=gs.map(n=>`<button class="ql" data-cat="${esc(n)}" style="${cat===n?"background:#262626;color:#fff":""}"><b style="background:linear-gradient(135deg,hsl(${hue(n)} 80% 55%),hsl(${(hue(n)+60)%360} 70% 30%))"></b><span>${esc(n)}</span></button>`).join("");
- pop();$("#fbtn").classList.toggle("act",sel.genre.size+sel.tag.size+sel.platform.size>0);hero()}
+ pop();$("#fbtn").classList.toggle("act",sel.genre.size+sel.tag.size+sel.platform.size>0);hero();recent()}
 function pop(){const G2=[["genre","Genre",[...new Set(G.map(g=>g.genre))].sort(),g=>[g.genre]],["tag","Features",[...new Set(G.flatMap(g=>g.tags||[]))].sort(),g=>g.tags||[]],["platform","Platform",[...new Set(G.map(g=>g.platform).filter(Boolean))].sort(),g=>[g.platform]]];
  $("#fgroups").innerHTML=G2.map(([k,l,o,f])=>`<details ${k==="genre"?"open":""}><summary>${l}</summary>${o.map(v=>`<label class="opt"><input type="checkbox" data-f="${k}" value="${esc(v)}" ${sel[k].has(v)?"checked":""}>${esc(v)}<em>${G.filter(g=>f(g).includes(v)).length}</em></label>`).join("")}</details>`).join("")}
 let T=null,hi=0,hold=false;
@@ -243,9 +244,9 @@ function detail(id,card){const g=byId(id);if(!g)return;const dl=g.url?null:su(g.
  if(src){const a=src.getBoundingClientRect(),gh=src.cloneNode(true);Object.assign(gh.style,{position:"fixed",left:a.left+"px",top:a.top+"px",width:a.width+"px",height:a.height+"px",margin:0,zIndex:70,transformOrigin:"top left",pointerEvents:"none",transition:"none",boxShadow:"0 24px 70px #000b",borderRadius:"14px"});
   document.body.appendChild(gh);mp.style.visibility="hidden";
   gh.animate([{transform:"none",borderRadius:"14px"},{transform:`translate(${b.left-a.left}px,${b.top-a.top}px) scale(${b.width/a.width},${b.height/a.height})`,borderRadius:"10px"}],{duration:580,easing:EASE,fill:"forwards"}).onfinish=()=>{mp.style.visibility="";gh.remove()}}}
-let launchT;
+function recent(){const el=$("#cont");let r=[];try{r=JSON.parse(localStorage.getItem("pg.recent")||"[]")}catch(e){}r=r.map(byId).filter(g=>g&&g.url).slice(0,6); if(!r.length||view!=="play"||q||cat){el.hidden=true;el.innerHTML="";return} el.hidden=false;el.innerHTML='<h2>Continue playing</h2><div class="crow">'+r.map(card).join("")+"</div>"} function saveRecent(id){try{let r=JSON.parse(localStorage.getItem("pg.recent")||"[]").filter(x=>x!==id);r.unshift(id);localStorage.setItem("pg.recent",JSON.stringify(r.slice(0,10)))}catch(e){}} let launchT;
 function play(id){const g=byId(id),u=g&&su(g.url);if(!u)return;
- if(typeof gtag==="function")try{gtag("event","play_game",{game_name:g.title})}catch(e){}
+ if(typeof gtag==="function")try{gtag("event","play_game",{game_name:g.title})}catch(e){}saveRecent(id);
  if(g.embed===false){window.open(u,"_blank","noopener");return}
  closeModal();const L=$("#launch"),f=$("#lframe"),bar=$("#lprog i");
  $("#lname").textContent=g.title;$("#ltitle").textContent=g.title;$("#lposter").innerHTML=poster(g);$("#lnew").href=u;$("#lnew2").href=u;$("#lslow").hidden=true;
